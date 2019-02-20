@@ -1,6 +1,6 @@
 <template>
-  <b-container fluid>
-    <h4 class="text-sm-left"> {{ axis.state.name }} </h4>
+  <b-container fluid :class="{'offline border border-danger rounded': !$encoder.online}">
+    <h4 class="text-sm-left"> {{ axis.state.name }} <small> <span v-show="!$encoder.online" class="badge xbadge-pill badge-danger"> offline </span></small> </h4>
 
     <b-row align-content="start" align-h="start" class="text-left">
       <b-col sm="auto" v-if="axis.state.supports_hour_angle">
@@ -63,6 +63,14 @@
 
   </b-container>
 </template>
+
+<style scoped>
+.offline {
+  pointer-events: none;
+  color: gray;
+  border: 1px solid red;
+}
+</style>
 
 <script>
 import AngleDisplay from './AngleDisplay.vue'
