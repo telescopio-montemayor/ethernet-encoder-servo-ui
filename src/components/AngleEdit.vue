@@ -9,7 +9,7 @@
       <b-input-group append="S" size="sm">
         <b-input class="mb-12 mr-sm-12 mb-sm-0" name="seconds" type="number" step="0.1" v-model.number="seconds"/>
       </b-input-group>
-      <b-button size="sm" variant="success" @click="onUpdate">
+      <b-button size="sm" variant="success" @click="onUpdate" v-if="!noUpdateButton">
         <font-awesome-icon icon="chevron-circle-right" />
       </b-button>
     </b-form>
@@ -55,6 +55,10 @@ export default {
                 seconds: 0
             }
         }
+      },
+      noUpdateButton: {
+        type: Boolean,
+        default: false,
       }
   },
   methods: {
