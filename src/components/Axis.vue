@@ -61,6 +61,23 @@
 
     </b-row>
 
+
+    <b-row align-content="start" align-h="start" class="text-left">
+      <b-col sm="auto">
+        <span> Nudge </span>
+        <b-button size="sm" variant="outline-primary" @click="nudge('down')">
+          <font-awesome-icon icon="caret-down" />
+        </b-button>
+        <b-button size="sm" variant="outline-primary" @click="nudge('up')">
+          <font-awesome-icon icon="caret-up" />
+        </b-button>
+      </b-col>
+
+      <b-col sm="auto">
+        <AngleEdit v-bind:angle="nudgeAmount" @change="nudgeAmount = $event" no-update-button/>
+      </b-col>
+    </b-row>
+
   </b-container>
 </template>
 
@@ -73,6 +90,11 @@
 </style>
 
 <script>
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { faCaretUp, faCaretDown  } from '@fortawesome/free-solid-svg-icons'
+library.add(faCaretUp);
+library.add(faCaretDown);
+
 import AngleDisplay from './AngleDisplay.vue'
 import AngleEdit from './AngleEdit.vue'
 
@@ -97,6 +119,8 @@ export default {
         displayDMS: true,
         target_angle: {degrees: 0, minutes: 0, seconds: 0},
         target_astronomical: {hours: 0, minutes: 0, seconds: 0},
+        nudge_angle: {degrees: 0, minutes: 0, seconds: 0},
+        nudge_astronomical: {hours: 0, minutes: 0, seconds: 0},
     }
   },
   computed: {
@@ -106,6 +130,22 @@ export default {
           } else {
             return this.target_astronomical;
           }
+      },
+      nudgeAmount: {
+        get () {
+          if (this.displayDMS) {
+            return this.nudge_angle;
+          } else {
+            return this.nudge_astronomical;
+          }
+        },
+        set (value) {
+          if (this.displayDMS) {
+            this.nudge_angle = value;
+          } else {
+            this.nudge_astronomical = value;
+          }
+        }
       },
   },
   methods: {
@@ -117,6 +157,19 @@ export default {
       },
       async setTracking (value) {
         this.axis.tracking = value;
+      },
+      async nudge (direction='up') {
+        let sign = (direction == 'up') ? 1.0 : -1.0;
+        let amount = Object.assign({}, this.nudgeAmount);
+
+        amount.seconds = Math.abs(amount.seconds) * sign;
+        amount.minutes = Math.abs(amount.minutes) * sign;
+        if (amount.hours !== undefined) {
+            amount.hours = Math.abs(amount.hours) * sign;
+        } else {
+            amount.degrees = Math.abs(amount.degrees) * sign;
+        }
+        this.axis.goto(amount, {relative: true});
       },
   }
 }
