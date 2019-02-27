@@ -163,10 +163,8 @@ export default {
         }
       },
   },
+
   methods: {
-      async update () {
-        this.axis.update();
-      },
       async goto ($event) {
         this.axis.goto($event);
       },
