@@ -6,8 +6,8 @@
 
 <style scoped>
 span.badge {
-  font-size: 1.5rem;
-  display: inline-block;
+  font-size: 1.2rem;
+  vertical-align: middle;
 }
 </style>
 
