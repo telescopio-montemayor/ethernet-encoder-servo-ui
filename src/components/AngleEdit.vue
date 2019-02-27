@@ -1,13 +1,13 @@
 <template>
     <b-form inline v-on:change="onChange" @keyup.enter="onUpdate" class="text-monospace">
       <b-input-group :append="getAngleUnit()" size="sm">
-        <b-input class="mb-12 mr-sm-12 mb-sm-0" name="angle-hour" type="number" v-model.number="degrees"/>
+        <b-input class="mb-12 mr-sm-12 mb-sm-0 degrees" name="angle-hour" type="number" v-model.number="degrees"/>
       </b-input-group>
       <b-input-group append="M" size="sm">
-        <b-input class="mb-12 mr-sm-12 mb-sm-0" name="minutes" type="number" min="-59" max="59" v-model.number="minutes"/>
+        <b-input class="mb-12 mr-sm-12 mb-sm-0 minutes" name="minutes" type="number" min="-59" max="59" v-model.number="minutes"/>
       </b-input-group>
       <b-input-group append="S" size="sm">
-        <b-input class="mb-12 mr-sm-12 mb-sm-0" name="seconds" type="number" step="0.1" v-model.number="seconds"/>
+        <b-input class="mb-12 mr-sm-12 mb-sm-0 seconds" name="seconds" type="number" step="0.1" v-model.number="seconds"/>
       </b-input-group>
       <b-button size="sm" variant="success" @click="onUpdate" v-if="!noUpdateButton">
         <font-awesome-icon icon="chevron-circle-right" />
@@ -16,8 +16,11 @@
 </template>
 
 <style scoped>
-input {
-  width: 6em !important;
+input.degrees, input.minutes {
+  width: 4em !important;
+}
+input.seconds {
+  width: 5em !important;
 }
 </style>
 
