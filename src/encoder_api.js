@@ -1,8 +1,11 @@
 import io from 'socket.io-client';
 
+import Emitter from './Emitter';
 
-class Axis {
+
+class Axis extends Emitter {
   constructor (initial_state, server_path='') {
+    super();
     this.$server_path = server_path;
     this.$id = initial_state.id;
     this.$base_path = `${this.$server_path}/api/devices/${this.$id}`;
@@ -23,6 +26,7 @@ class Axis {
 
   __update_state (newState) {
     this.state = Object.assign({}, this.state, newState);
+    this.$emit('update', this.state);
     return this;
   }
 
