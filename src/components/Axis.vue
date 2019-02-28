@@ -114,6 +114,9 @@
   color: gray;
   border: 1px solid red;
 }
+[role="button"] {
+  cursor: pointer;
+}
 </style>
 
 <script>
