@@ -59,6 +59,12 @@ export default {
                 millisPerPixel: 20,
             };
         }
+      },
+      yFormatter: {
+        type: Function,
+        default () {
+            return SmoothieChart.defaultChartOptions.yIntermediateFormatter
+        }
       }
   },
 
@@ -78,6 +84,9 @@ export default {
       $updateOptions() {
           this.$dataSeries.delay = this.$chart.delay = parseInt(this.delay);
           this.$chart.options.maxDataSetLenght = parseInt(this.maxDataSetLenght);
+          this.$chart.options.yMaxFormatter = this.yFormatter || SmoothieChart.defaultChartOptions.yIntermediateFormatter;
+          this.$chart.options.yMinFormatter = this.yFormatter || SmoothieChart.defaultChartOptions.yIntermediateFormatter;
+          this.$chart.options.yIntermediateFormatter = this.yFormatter || SmoothieChart.defaultChartOptions.yIntermediateFormatter;
       },
   },
 
@@ -86,6 +95,9 @@ export default {
         nonRealtimeData: false,
         millisPerPixel: 20,
         maxDataSetLength: this.maxDataSetLenght,
+        yMinFormatter: this.yFormatter,
+        yMaxFormatter: this.yFormatter,
+        yIntermediateFormatter: this.yFormatter,
       });
       let data1 = this.$dataSeries = new TimeSeries();
 
