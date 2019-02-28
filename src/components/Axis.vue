@@ -92,6 +92,19 @@
       </b-col>
     </b-row>
 
+    <b-row align-content="start" align-h="start" align-v="center" class="text-left align-items-sm-center my-3" v-b-toggle="`error-chart-${ axis.$id }`">
+      <b-col sm="auto">
+        <span> Position error </span>
+        <AngleDisplay :angle="positionError"/>
+        <b-button size="sm" variant="outline-primary">
+            Toggle Plot
+        </b-button>
+        <b-collapse :id="`error-chart-${ axis.$id }`" size="sm">
+          <chart ref="errorChart" :running="$encoder.online"> </chart>
+        </b-collapse>
+      </b-col>
+    </b-row>
+
   </b-container>
 </template>
 
@@ -112,6 +125,7 @@ library.add(faEdit);
 
 import AngleDisplay from './AngleDisplay.vue'
 import AngleEdit from './AngleEdit.vue'
+import Chart from './Chart.vue'
 
 import { AnglePosition, AstronomicalPosition } from '../units';
 
@@ -120,6 +134,7 @@ export default {
   components: {
     AngleDisplay,
     AngleEdit,
+    Chart,
   },
   props: {
       axis: {
@@ -207,6 +222,18 @@ export default {
         }
         this.axis.goto(amount, {relative: true});
       },
+      onAxisUpdate () {
+          let error = this.positionError.to_decimal();
+          this.$refs.errorChart.addData(error);
+      }
+  },
+
+  mounted () {
+    this.axis.$on('update', this.onAxisUpdate, this);
+  },
+
+  beforeDestroy () {
+    this.axis.$off('update', this.onAxisUpdate, this);
   }
 }
 </script>
