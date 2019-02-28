@@ -100,7 +100,7 @@
             Toggle Plot
         </b-button>
         <b-collapse :id="`error-chart-${ axis.$id }`" size="sm">
-          <chart ref="errorChart" :running="$encoder.online"> </chart>
+          <chart ref="errorChart" :running="$encoder.online" :y-formatter="formatErrorValue"> </chart>
         </b-collapse>
       </b-col>
     </b-row>
@@ -130,7 +130,7 @@ import AngleDisplay from './AngleDisplay.vue'
 import AngleEdit from './AngleEdit.vue'
 import Chart from './Chart.vue'
 
-import { AnglePosition, AstronomicalPosition } from '../units';
+import { AnglePosition, AstronomicalPosition, decimal_to_dms } from '../units';
 
 export default {
   name: 'axis',
@@ -228,6 +228,15 @@ export default {
       onAxisUpdate () {
           let error = this.positionError.to_decimal();
           this.$refs.errorChart.addData(error);
+      },
+      formatErrorValue(error) {
+          let unit = this.displayDMS ? 'D' : 'H';
+          let parsed = decimal_to_dms(error);
+
+          let dh = parsed.degrees;
+          let m  = parsed.minutes;
+          let s  = parsed.seconds.toPrecision(2);
+          return `${dh}${unit} : ${m}M : ${s}S`;
       }
   },
 
