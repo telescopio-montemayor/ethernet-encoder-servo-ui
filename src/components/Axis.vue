@@ -113,6 +113,8 @@ library.add(faEdit);
 import AngleDisplay from './AngleDisplay.vue'
 import AngleEdit from './AngleEdit.vue'
 
+import { AnglePosition, AstronomicalPosition } from '../units';
+
 export default {
   name: 'axis',
   components: {
@@ -139,6 +141,27 @@ export default {
     }
   },
   computed: {
+      positionError () {
+          let target, currentPosition, delta;
+          let state = this.axis.state;
+
+          if (this.displayDMS) {
+            target = new AnglePosition(state.target_angle);
+            currentPosition = new AnglePosition(state.position_angle);
+          } else {
+            target = new AstronomicalPosition(state.target_astronomical);
+            currentPosition = new AstronomicalPosition(state.position_astronomical);
+          }
+
+
+          delta = target.to_decimal() - currentPosition.to_decimal();
+          if (this.displayDMS) {
+            return AnglePosition.from_decimal(delta);
+          } else {
+            return AstronomicalPosition.from_decimal(delta);
+          }
+      },
+
       newTarget () {
           if (this.displayDMS) {
             return this.target_angle;
