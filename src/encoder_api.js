@@ -71,6 +71,26 @@ class Axis extends Emitter {
     return value;
   }
 
+  get closed_loop() {
+    return Boolean(this.state.closed_loop);
+  }
+
+  set closed_loop (value) {
+    let action = value ? 'resume': 'halt';
+    let url = `${this.$base_path}/${action}`;
+    return this.__do_action(url, {})
+    .then((axisData) => {
+      return this.__update_state(axisData);
+    });
+  }
+
+  halt () {
+    this.closed_loop = false;
+  }
+
+  resume () {
+    this.closed_loop = true;
+  }
 }
 
 class EncoderApi {
