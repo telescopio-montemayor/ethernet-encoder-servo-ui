@@ -23,6 +23,7 @@
             buttons
             button-variant="outline-primary"
             v-model="closedLoop"
+            v-on:change="setClosedLoop"
             :options="[
                 { text: 'Closed Loop', value: true  },
                 { text: 'Open Loop',   value: false },
@@ -211,6 +212,9 @@ export default {
       },
       async setTracking (value) {
         this.axis.tracking = value;
+      },
+      async setClosedLoop (value) {
+        this.axis.closed_loop = value;
       },
       async nudge (direction='up') {
         let sign = (direction == 'up') ? 1.0 : -1.0;
