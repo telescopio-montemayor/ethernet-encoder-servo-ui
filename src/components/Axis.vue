@@ -22,7 +22,7 @@
             size="sm"
             buttons
             button-variant="outline-primary"
-            v-model="closedLoop"
+            v-model="axis.state.closed_loop"
             v-on:change="setClosedLoop"
             :options="[
                 { text: 'Closed Loop', value: true  },
@@ -36,7 +36,7 @@
             size="sm"
             buttons
             button-variant="outline-primary"
-            :disabled="!closedLoop"
+            :disabled="!axis.state.closed_loop"
             v-model="axis.state.tracking"
             v-on:change="setTracking"
             :options="[
@@ -151,7 +151,6 @@ export default {
   },
   data: function () {
     return {
-        closedLoop: true,
         displayDMS: true,
         target_angle: {degrees: 0, minutes: 0, seconds: 0},
         target_astronomical: {hours: 0, minutes: 0, seconds: 0},
