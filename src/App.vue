@@ -1,5 +1,10 @@
 <template>
   <div id="app">
+      <b-container fluid class="mb-5">
+          <b-button block variant="outline-danger" :disabled="!api.online" @click="haltAll()">
+              Halt All
+          </b-button>
+      </b-container>
       <axis v-for="axis in api.$axes" :key="axis.id" :axis="axis"/>
   </div>
 </template>
@@ -13,6 +18,11 @@ export default {
     Axis
   },
   methods: {
+    async haltAll () {
+        for (let axis of this.$encoder.$axes) {
+            axis.closed_loop = false;
+        }
+    }
   },
   data () {
       return {
