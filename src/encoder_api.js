@@ -3,10 +3,23 @@ import io from 'socket.io-client';
 import Emitter from './Emitter';
 
 
+function build_auth_headers(auth={username:'', password:''}) {
+  let {username, password} = auth;
+  let headers = new Headers();
+
+  if (username || password) {
+    headers.append('Authorization', 'Basic ' + btoa(username + ':' + password));
+  }
+  return headers;
+}
+
+
 class Axis extends Emitter {
-  constructor (initial_state, server_path='') {
+  constructor (initial_state, server_path='', auth={username:'', password:''}) {
     super();
     this.$server_path = server_path;
+    this.$headers = build_auth_headers(auth);
+    this.$headers.append('Content-Type', 'application/json');
     this.$id = initial_state.id;
     this.$base_path = `${this.$server_path}/api/devices/${this.$id}`;
     this.state = Object.assign({}, initial_state);
@@ -15,9 +28,8 @@ class Axis extends Emitter {
   async __do_action(url, payload) {
     return fetch(url, {
       method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json'
-      },
+      headers: this.$headers,
+      credentials: 'include',
       body: JSON.stringify(payload)
     }).then((response) => {
       return response.json();
@@ -35,7 +47,7 @@ class Axis extends Emitter {
       return this.__update_state(axisData);
     }
 
-    return fetch(this.$base_path)
+    return fetch(this.$base_path, {headers: this.$headers, credentials: 'include'})
     .then((response) => {
       return response.json();
     }).then((axisData) => {
@@ -101,7 +113,7 @@ class EncoderApi {
     this.online = false;
   }
 
-  initialize (path) {
+  initialize (path, options={auth:{ username:'', password: '' }}) {
     let socket;
 
     this.finalize();
@@ -109,6 +121,9 @@ class EncoderApi {
     if (path) {
       this.$server_path = path;
     }
+
+    this.$auth = options.auth;
+    this.$headers = build_auth_headers(options.auth);
 
 
     socket = this.$socket = io(this.$server_path);
@@ -160,7 +175,7 @@ class EncoderApi {
   }
 
   async getAxes () {
-    return fetch(`${this.$server_path}/api/devices/`)
+    return fetch(`${this.$server_path}/api/devices/`, {headers: this.$headers, credentials: 'include'})
     .then((response) => {
       return response.json();
     }).then((axisData) => {
@@ -174,8 +189,8 @@ class EncoderApi {
 var api = new EncoderApi();
 
 export default {
-  install (Vue,  server_path='') {
-    api.initialize(server_path);
+  install (Vue,  server_path='', options={auth:{ username:'', password: '' }}) {
+    api.initialize(server_path, options);
     Vue.prototype.$encoder = api;
   }
 }
