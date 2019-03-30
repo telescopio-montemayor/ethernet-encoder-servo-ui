@@ -125,8 +125,10 @@ class EncoderApi {
     this.$auth = options.auth;
     this.$headers = build_auth_headers(options.auth);
 
+    socket = this.$socket = io(this.$server_path, {
+      path: (new URL(this.$server_path)).pathname + '/socket.io'
+    });
 
-    socket = this.$socket = io(this.$server_path);
     socket.on('position', (state) => {
       let axis = this.$axes_by_id[state.id];
 
