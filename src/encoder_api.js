@@ -125,8 +125,12 @@ class EncoderApi {
     this.$auth = options.auth;
     this.$headers = build_auth_headers(options.auth);
 
+    let basePath = (new URL(this.$server_path)).pathname;
+    if (!basePath.endsWith('/')) {
+      basePath += '/'
+    }
     socket = this.$socket = io(this.$server_path, {
-      path: (new URL(this.$server_path)).pathname + '/socket.io'
+      path: basePath + 'socket.io'
     });
 
     socket.on('position', (state) => {
