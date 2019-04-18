@@ -125,12 +125,16 @@ class EncoderApi {
     this.$auth = options.auth;
     this.$headers = build_auth_headers(options.auth);
 
-    let basePath = (new URL(this.$server_path)).pathname;
+    let parsedPath = (new URL(this.$server_path));
+    let basePath = parsedPath.pathname;
     if (!basePath.endsWith('/')) {
       basePath += '/'
     }
-    socket = this.$socket = io(this.$server_path, {
-      path: basePath + 'socket.io'
+
+    // XXX: We need to specify the path as the server root, even if the real application is mounted somewhere below it.
+    // Otherwise we end up requesting the sub-path as namespace and thus our listeners would not be fired.
+    socket = this.$socket = io(parsedPath.origin, {
+      path: basePath + 'socket.io',
     });
 
     socket.on('position', (state) => {

@@ -26,7 +26,7 @@ class AnglePosition {
   minutes = 0;
   seconds = 0;
 
-  constructor ({degrees = 0, minutes = 0, seconds = 0}) {
+  constructor ({degrees = 0, minutes = 0, seconds = 0} = {}) {
     this.degrees = degrees;
     this.minutes = minutes;
     this.seconds = seconds;
@@ -56,7 +56,7 @@ class AstronomicalPosition {
   seconds = 0;
   longitude = undefined;
 
-  constructor ({hours = 0, minutes = 0, seconds = 0, longitude = undefined}) {
+  constructor ({hours = 0, minutes = 0, seconds = 0, longitude = undefined} = {}) {
     this.hours   = hours;
     this.minutes = minutes;
     this.seconds = seconds;
