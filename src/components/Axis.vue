@@ -45,6 +45,25 @@
             ]"
         />
       </b-col>
+
+      <b-col sm="auto">
+        <b-button size="sm" variant="outline-primary" v-b-toggle="`pid-${ axis.$id }`">
+            PID Control
+        </b-button>
+      </b-col>
+
+      <b-col sm="auto">
+      </b-col>
+
+    </b-row>
+
+    <b-row align-content="start" align-h="start" align-v="center" class="text-left align-items-sm-center my-3">
+      <b-col sm="auto">
+        <b-collapse :id="`pid-${ axis.$id }`" size="sm">
+            <PidEdit :parameters="axis.state.pid" no-update-button @change="updatePid($event)"/>
+        </b-collapse>
+      </b-col>
+
       <b-col sm="auto">
       </b-col>
     </b-row>
@@ -129,6 +148,7 @@ library.add(faEdit);
 
 import AngleDisplay from './AngleDisplay.vue'
 import AngleEdit from './AngleEdit.vue'
+import PidEdit from './PidEdit.vue'
 import Chart from './Chart.vue'
 
 import { AnglePosition, AstronomicalPosition, decimal_to_dms } from '../units';
@@ -138,6 +158,7 @@ export default {
   components: {
     AngleDisplay,
     AngleEdit,
+    PidEdit,
     Chart,
   },
   props: {
@@ -206,6 +227,9 @@ export default {
   },
 
   methods: {
+      async updatePid (parameters) {
+        this.axis.set_pid_parameters(parameters);
+      },
       async goto ($event) {
         this.axis.goto($event);
       },
