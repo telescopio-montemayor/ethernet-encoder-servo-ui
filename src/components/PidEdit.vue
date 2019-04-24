@@ -1,19 +1,31 @@
 <template>
     <b-form inline v-on:change="onChange" @keyup.enter="onUpdate" class="text-monospace">
-      <b-input-group append="Kp" size="sm">
-        <b-input class="mb-12 mr-sm-12 mb-sm-0" name="Kp" type="number" min="0" max="1000" step=".25" v-model.number="Kp"/>
+      <b-input-group prepend="Kp" size="sm">
+        <b-input class="mb-12 mr-sm-12 mb-sm-0" name="Kp" type="number" min="0" max="1000" step=".25" v-model.number="state.Kp"
+            @focus.native="edit($event.target.name)"
+            @blur.native="leave($event.target.name)"
+            />
       </b-input-group>
 
-      <b-input-group append="Ki" size="sm">
-        <b-input class="mb-12 mr-sm-12 mb-sm-0" name="Ki" type="number" min="0" max="1000" step=".25" v-model.number="Ki"/>
+      <b-input-group prepend="Ki" size="sm">
+        <b-input class="mb-12 mr-sm-12 mb-sm-0" name="Ki" type="number" min="0" max="1000" step=".25" v-model.number="state.Ki"
+            @focus.native="edit($event.target.name)"
+            @blur.native="leave($event.target.name)"
+            />
       </b-input-group>
 
-      <b-input-group append="Kd" size="sm">
-        <b-input class="mb-12 mr-sm-12 mb-sm-0" name="Kd" type="number" min="0" max="10" step=".025" v-model.number="Kd"/>
+      <b-input-group prepend="Kd" size="sm">
+        <b-input class="mb-12 mr-sm-12 mb-sm-0" name="Kd" type="number" min="0" max="10" step=".025" v-model.number="state.Kd"
+            @focus.native="edit($event.target.name)"
+            @blur.native="leave($event.target.name)"
+            />
       </b-input-group>
 
-      <b-input-group append="D.Filtering" size="sm">
-        <b-input class="mb-12 mr-sm-12 mb-sm-0" name="derivative_filtering" type="number" min="0" max="1" step=".01" v-model.number="derivative_filtering"/>
+      <b-input-group prepend="D.Filtering" size="sm">
+        <b-input class="mb-12 mr-sm-12 mb-sm-0" name="derivative_filtering" type="number" min="0" max="1" step=".01" v-model.number="state.derivative_filtering"
+            @focus.native="edit($event.target.name)"
+            @blur.native="leave($event.target.name)"
+            />
       </b-input-group>
 
       <b-button size="sm" variant="success" @click="onUpdate" v-if="!noUpdateButton">
@@ -51,18 +63,41 @@ export default {
   },
   methods: {
     onChange() {
-      this.$emit('change', this);
+      this.$emit('change', Object.assign({}, this.state));
     },
     onUpdate() {
-      this.$emit('update', this);
+      this.$emit('update', Object.assign({}, this.state));
+    },
+    edit(name) {
+      this.editing[name] = true;
+    },
+    leave(name) {
+      this.editing[name] = false;
     }
+  },
+  watch: {
+      parameters: function () {
+          for (var k in this.editing) {
+              if (!this.editing[k]) {
+                    this.state[k] = this.parameters[k];
+              }
+          }
+      },
   },
   data: function () {
     return {
-        Kp: this.parameters.Kp,
-        Ki: this.parameters.Ki,
-        Kd: this.parameters.Kd,
-        derivative_filtering: this.parameters.derivative_filtering,
+        editing: {
+            Kp: false,
+            Ki: false,
+            Kd: false,
+            derivative_filtering: false,
+        },
+        state: {
+            Kp: this.parameters.Kp,
+            Ki: this.parameters.Ki,
+            Kd: this.parameters.Kd,
+            derivative_filtering: this.parameters.derivative_filtering,
+        },
     }
   },
 }
