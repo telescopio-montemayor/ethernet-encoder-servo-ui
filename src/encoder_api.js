@@ -69,6 +69,15 @@ class Axis extends Emitter {
     });
   }
 
+  async set_pid_parameters (parameters={Kp: 1, Ki: 1, Kd: 1, derivative_filtering:0.75}) {
+    let url = `${this.$base_path}/controller`;
+
+    return this.__do_action(url, parameters)
+    .then((axisData) => {
+      return this.__update_state(axisData);
+    });
+  }
+
   get tracking() {
     return Boolean(this.state.tracking);
   }
