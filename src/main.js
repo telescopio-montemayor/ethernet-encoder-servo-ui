@@ -2,7 +2,14 @@ import Vue from 'vue'
 import App from './App.vue'
 
 import Encoder from './encoder_api';
-Vue.use(Encoder, 'http://localhost:5000');
+
+// Edit as needed
+Vue.use(Encoder, 'http://localhost:5000', {
+  auth: {
+    username: 'some-user-name',
+    password: 'a-very-secret-password'
+  }
+});
 
 import BootstrapVue from 'bootstrap-vue'
 Vue.use(BootstrapVue);
