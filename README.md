@@ -2,6 +2,9 @@
 
 A nicer interface on top of <https://github.com/telescopio-montemayor/ethernet-encoder-servo>
 
+Out of the box this works with an instance of ethernet-servo running on localhost. Edit the connection details inside
+*src/main.js* if needed.
+
 ## Project setup
 ```
 npm install
